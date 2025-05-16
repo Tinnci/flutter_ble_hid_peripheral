@@ -1,0 +1,57 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code related
+# Uncomment if you want to ignore VS Code specific settings
+.vscode/
+
+# Flutter/Dart/Pub related
+# Libraries should not include pubspec.lock at the root.
+# The example app's pubspec.lock SHOULD be committed.
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# General build output
+build/
+
+# Android specific
+android/build/
+android/.gradle/
+# If your plugin example or plugin itself uses NDK:
+# android/.cxx/
+# android/app/build/ # Usually covered by the main build/ or example's .gitignore
+
+# iOS specific (if you add iOS support later)
+# ios/.symlinks/
+# ios/Flutter/App.framework
+# ios/Flutter/Flutter.framework
+# ios/Flutter/Generated.xcconfig
+# ios/Flutter/flutter_export_environment.sh
+# ios/Runner/GeneratedPluginRegistrant.*
+# Pods/
+# Podfile.lock
+
+# macOS specific (if you add macOS support later)
+# macos/Flutter/ephemeral/
+# macos/Pods/
+# macos/.symlinks/
