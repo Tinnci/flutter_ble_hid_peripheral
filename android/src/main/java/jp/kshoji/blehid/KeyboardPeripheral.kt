@@ -198,15 +198,32 @@ class KeyboardPeripheral(context: Context) : HidPeripheral(
     override fun onOutputReport(outputReport: ByteArray) {
         // This is where you would handle LED status from the host
         // outputReport typically contains a byte indicating LED states (Num Lock, Caps Lock, Scroll Lock)
-        // Example: outputReport[0] might have bits for NumLock (bit 0), CapsLock (bit 1), etc.
-        if (outputReport.isNotEmpty()) {
-             Log.d(TAG, "Output Report (LED status) received: ${outputReport.contentToString()}")
-             // val ledStatus = outputReport[0] // Assuming report ID is not prepended by host for output
-             // val numLock = (ledStatus.toInt() and 0x01) != 0
-             // val capsLock = (ledStatus.toInt() and 0x02) != 0
-             // val scrollLock = (ledStatus.toInt() and 0x04) != 0
-             // Log.d(TAG, "NumLock: $numLock, CapsLock: $capsLock, ScrollLock: $scrollLock")
-             // Update UI or internal state if needed
+        if (outputReport.isEmpty()) {
+            Log.w(TAG, "Output Report is empty.")
+            return
         }
+
+        val ledStatus: Byte
+        // The keyboard's report map has REPORT_ID 0x01 for its collection,
+        // so the host should send the Report ID.
+        if (outputReport[0] == 0x01.toByte() && outputReport.size >= 2) {
+            // Report ID is present, data is the second byte
+            ledStatus = outputReport[1]
+            Log.d(TAG, "Output Report (LED status) received with Report ID 1: Value = ${String.format("%02X", ledStatus)}")
+        } else if (outputReport.size == 1) {
+            // Fallback if only one byte is received (less common for reports with explicit IDs)
+            ledStatus = outputReport[0]
+            Log.d(TAG, "Output Report (LED status) received (assumed raw 1-byte data): Value = ${String.format("%02X", ledStatus)}")
+        } else {
+            Log.w(TAG, "Unexpected Output Report format or length: ${outputReport.contentToString()}")
+            return
+        }
+
+        // Example: outputReport[0] might have bits for NumLock (bit 0), CapsLock (bit 1), etc.
+        // val numLock = (ledStatus.toInt() and 0x01) != 0
+        // val capsLock = (ledStatus.toInt() and 0x02) != 0
+        // val scrollLock = (ledStatus.toInt() and 0x04) != 0
+        // Log.d(TAG, "NumLock: $numLock, CapsLock: $capsLock, ScrollLock: $scrollLock")
+        // Update UI or internal state if needed
     }
 } 
