@@ -2,6 +2,8 @@
 
 A Flutter plugin that allows your Flutter application to act as a Bluetooth Low Energy (BLE) Human Interface Device (HID) peripheral, specifically for emulating a keyboard and a mouse.
 
+**Important Note: This project is currently not working. If you have any ideas or clues on how to fix it, please feel free to contact me.**
+
 ## Features
 
 *   Advertise as a BLE HID Keyboard
@@ -11,17 +13,6 @@ A Flutter plugin that allows your Flutter application to act as a Bluetooth Low 
 *   Send mouse button clicks (left, right, middle)
 *   Connection state monitoring
 *   Android support (iOS support is not yet implemented)
-
-## Getting Started
-
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 
 ## Installation
 
