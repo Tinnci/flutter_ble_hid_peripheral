@@ -32,6 +32,12 @@ class MethodChannelFlutterBleHidPeripheral extends FlutterBleHidPeripheralPlatfo
           );
         }
         break;
+      case 'onLog':
+        final String? message = call.arguments as String?;
+        if (message != null) {
+          debugPrint('[Native Log] $message');
+        }
+        break;
       default:
         // Handle other method calls if any (e.g., for events not fitting a direct method response)
         debugPrint('Unhandled method call from native: ${call.method}');

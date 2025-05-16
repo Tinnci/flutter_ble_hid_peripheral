@@ -525,6 +525,23 @@ abstract class HidPeripheral protected constructor(
                     Log.e(TAG, "Exception on cancelConnection for ${device.address}", e)
                 }
             }
+            // Force update our state and notify Dart, as onConnectionStateChange might not be reliably called
+            // for all devices after cancelConnection.
+            val proactivelyDisconnectedDevices = ArrayList(devicesToDisconnect) // Iterate over the same list
+            var stateChanged = false
+            for (device in proactivelyDisconnectedDevices) {
+                if (bluetoothDevicesMap.containsKey(device.address)) {
+                    Log.d(TAG, "Proactively treating ${device.address} as disconnected after cancelConnection attempt.")
+                    bluetoothDevicesMap.remove(device.address)
+                    // Use BluetoothGatt.GATT_SUCCESS for status as we initiated the disconnect.
+                    connectionStateCallback?.invoke(ConnectionState(device, BluetoothGatt.GATT_SUCCESS, BluetoothProfile.STATE_DISCONNECTED))
+                    stateChanged = true
+                }
+            }
+            if (stateChanged) {
+                 Log.d(TAG, "disconnectAllConnectedDevices: bluetoothDevicesMap size after proactive removal: ${bluetoothDevicesMap.size}")
+            }
+
             // It's not guaranteed that onConnectionStateChange will be called immediately or for all devices
             // if cancelConnection fails silently or if the gattServer is already closing.
             // However, for successful cancellations, onConnectionStateChange is the proper place for cleanup.
