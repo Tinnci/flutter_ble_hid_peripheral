@@ -158,7 +158,23 @@ class FlutterBleHidPeripheralPlugin: FlutterPlugin, MethodCallHandler, ActivityA
           result.success(jp.kshoji.blehid.util.BleUtils.isBluetoothEnabled(appContext))
         }
         // Placeholder for other device types
-        // "startMouse" -> result.notImplemented() 
+        // "startMouse" -> result.notImplemented()
+        "disconnectAllDevices" -> {
+          if (keyboardPeripheral != null) {
+            keyboardPeripheral?.disconnectAllConnectedDevices()
+            // Assuming disconnect might imply we are no longer actively trying to use this peripheral instance for new connections immediately
+            // but let's not null it out here, stopAdvertising should be used for that.
+            _logToDart("disconnectAllDevices called on keyboardPeripheral")
+          } else if (mousePeripheral != null) {
+            mousePeripheral?.disconnectAllConnectedDevices()
+            _logToDart("disconnectAllDevices called on mousePeripheral")
+          } else {
+            _logToDart("disconnectAllDevices called but no active peripheral.")
+            result.success(null) // or specific result indicating no active peripheral
+            return
+          }
+          result.success(null)
+        }
         else -> result.notImplemented()
       }
     } catch (e: UnsupportedOperationException) {
@@ -231,5 +247,11 @@ class FlutterBleHidPeripheralPlugin: FlutterPlugin, MethodCallHandler, ActivityA
   override fun onDetachedFromActivity() {
     activity = null
     Log.d(TAG, "Plugin onDetachedFromActivity")
+  }
+
+  private fun _logToDart(message: String) {
+    activity?.runOnUiThread {
+        channel.invokeMethod("onLog", message)
+    }
   }
 }

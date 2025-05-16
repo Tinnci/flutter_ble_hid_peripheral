@@ -322,6 +322,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     _log("Mouse button state changed: $_currentMouseButtons");
   }
 
+  Future<void> _disconnectAllDevices() async {
+    try {
+      await FlutterBleHidPeripheral.disconnectAllDevices();
+      _log("disconnectAllDevices() called.");
+      // The onConnectionStateChanged stream should update the UI regarding disconnection
+    } catch (e) {
+      _log("Error disconnecting devices: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -407,6 +417,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 backgroundColor: _isAdvertising ? Colors.redAccent : Colors.green,
               ),
               child: Text(_isAdvertising ? 'Stop Advertising ${_activePeripheralMode.toString().split('.').last}' : 'Start Advertising ${_activePeripheralMode.toString().split('.').last}'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: (_connectionState != null && _connectionState!.newState == 2) // Only enable if connected (newState == 2 for connected)
+                  ? _disconnectAllDevices
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              child: const Text('Disconnect All Devices'),
             ),
             const SizedBox(height: 20),
             if (_activePeripheralMode == PeripheralMode.keyboard) ...[

@@ -105,6 +105,11 @@ class MethodChannelFlutterBleHidPeripheral extends FlutterBleHidPeripheralPlatfo
     });
   }
 
+  @override
+  Future<void> disconnectAllDevices() async {
+    await methodChannel.invokeMethod<void>('disconnectAllDevices');
+  }
+
   // Dispose the stream controller when no longer needed (though platform channels are typically long-lived)
   // For a plugin like this, it might not be strictly necessary to manually close it unless the plugin itself is disposed.
   // void dispose() {

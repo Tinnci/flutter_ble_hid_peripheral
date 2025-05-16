@@ -99,4 +99,9 @@ class FlutterBleHidPeripheral {
       buttons: buttons,
     );
   }
+
+  /// Disconnects all currently connected BLE devices from the peripheral.
+  static Future<void> disconnectAllDevices() {
+    return FlutterBleHidPeripheralPlatform.instance.disconnectAllDevices();
+  }
 }

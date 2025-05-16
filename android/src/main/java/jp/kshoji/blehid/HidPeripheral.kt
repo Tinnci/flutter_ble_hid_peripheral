@@ -494,6 +494,43 @@ abstract class HidPeripheral protected constructor(
         Log.d(TAG, "Advertising stopped and GATT server closed. bluetoothDevicesMap size: ${bluetoothDevicesMap.size}")
     }
 
+    /**
+     * Disconnects all currently connected BLE devices.
+     * This will trigger onConnectionStateChange for each device with STATE_DISCONNECTED.
+     */
+    @SuppressLint("MissingPermission")
+    fun disconnectAllConnectedDevices() {
+        handler.post {
+            if (gattServer == null) {
+                Log.w(TAG, "GATT Server not available, cannot disconnect devices.")
+                return@post
+            }
+            if (bluetoothDevicesMap.isEmpty()) {
+                Log.d(TAG, "No devices currently connected.")
+                return@post
+            }
+
+            Log.d(TAG, "Attempting to disconnect ${bluetoothDevicesMap.size} device(s): ${bluetoothDevicesMap.keys.joinToString()}")
+            // Create a copy of the devices to iterate over to avoid ConcurrentModificationException
+            // as onConnectionStateChange might modify the map during iteration.
+            val devicesToDisconnect = ArrayList(bluetoothDevicesMap.values)
+            for (device in devicesToDisconnect) {
+                try {
+                    Log.d(TAG, "Cancelling connection to ${device.address}")
+                    gattServer?.cancelConnection(device)
+                    // onConnectionStateChange will handle map removal and callbacks
+                } catch (se: SecurityException) {
+                    Log.e(TAG, "SecurityException on cancelConnection for ${device.address}. Check BLUETOOTH_CONNECT.", se)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Exception on cancelConnection for ${device.address}", e)
+                }
+            }
+            // It's not guaranteed that onConnectionStateChange will be called immediately or for all devices
+            // if cancelConnection fails silently or if the gattServer is already closing.
+            // However, for successful cancellations, onConnectionStateChange is the proper place for cleanup.
+        }
+    }
+
     private val advertiseCallbackInstance = object : AdvertiseCallback() {
         @SuppressLint("MissingPermission")
         override fun onStartSuccess(settingsInEffect: AdvertiseSettings) {

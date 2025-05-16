@@ -94,4 +94,8 @@ abstract class FlutterBleHidPeripheralPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError('sendMouseMovement() has not been implemented.');
   }
+
+  Future<void> disconnectAllDevices() {
+    throw UnimplementedError('disconnectAllDevices() has not been implemented.');
+  }
 }
