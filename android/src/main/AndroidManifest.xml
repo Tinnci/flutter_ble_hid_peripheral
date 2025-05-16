@@ -1,0 +1,35 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.example.flutter_ble_hid_peripheral">
+
+    <!-- Pre-Android 12 Permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
+
+    <!-- Android 12 (API 31) and higher permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Feature declaration is important -->
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+
+    <!-- Optional: For background operation using a Foreground Service -->
+    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> -->
+    <!-- Required for Foreground Service notifications on Android 13 (API 33) and higher -->
+    <!-- <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> -->
+
+    <application>
+        <!-- Flutter Embedding V2 requires this meta-data tag to be present. -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+        
+        <!-- Optional: If using a foreground service for background operation -->
+        <!--
+        <service android:name=".YourBleForegroundService"
+                 android:exported="false"
+                 android:foregroundServiceType="connectedDevice" />
+        -->
+    </application>
+</manifest>
