@@ -67,7 +67,7 @@ class KeyboardPeripheral(context: Context) : HidPeripheral(
             INPUT(1),           0x02,       // Data, Var, Abs (Modifier byte)
             REPORT_COUNT(1),    0x01,       // 1 report
             REPORT_SIZE(1),     0x08,       // 8 bits for reserved byte
-            INPUT(1),           0x01,       // Cnst, Ary, Abs (Reserved byte)
+            INPUT(1),           0x03,       // Cnst, Var, Abs (Reserved byte)
             REPORT_COUNT(1),    0x05,       // 5 reports
             REPORT_SIZE(1),     0x01,       // 1 bit each
             USAGE_PAGE(1),      0x08,       // LEDs
